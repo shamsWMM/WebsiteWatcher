@@ -8,10 +8,8 @@ References: [Azure Functions for Developers](https://github.com/LinkedInLearning
 ## Creating Azure Functions From Terminal
 ```bash
 func init # select isolated worker and c#
-
 # create a new function
 func new # select type of trigger
-
 # build the project and load functions
 func start
 ```
