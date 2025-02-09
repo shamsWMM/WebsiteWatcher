@@ -6,7 +6,7 @@ using PuppeteerSharp;
 
 namespace WebsiteWatcher;
 
-public class PdfCreator(ILogger<PdfCreator> logger)
+public class PdfCreator(ILogger<PdfCreator> logger, PdfCreatorServivce pdfCreatorServivce)
 {
     [Function(nameof(PdfCreator))]
     public async Task Run(
@@ -16,7 +16,7 @@ public class PdfCreator(ILogger<PdfCreator> logger)
         {
             if (change.Operation == SqlChangeOperation.Insert)
             {
-                var result = await ConvertPageToPdfAsync(change.Item.Url);
+                var result = await pdfCreatorServivce.ConvertPageToPdfAsync(change.Item.Url);
 
                 logger.LogInformation($"PDF stream length is: {result.Length}");
 
@@ -25,20 +25,5 @@ public class PdfCreator(ILogger<PdfCreator> logger)
                 await blobClient.UploadAsync(result);
             }
         }
-    }
-
-    private async Task<Stream> ConvertPageToPdfAsync(string url)
-    {
-        var browserFetcher = new BrowserFetcher();
-
-        await browserFetcher.DownloadAsync();
-        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
-        await using var page = await browser.NewPageAsync();
-        await page.GoToAsync(url);
-        await page.EvaluateExpressionHandleAsync("document.fonts.ready");
-        var result = await page.PdfStreamAsync();
-        result.Position = 0;
-
-        return result;
     }
 }

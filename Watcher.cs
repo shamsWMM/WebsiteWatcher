@@ -8,7 +8,7 @@ using PuppeteerSharp;
 
 namespace WebsiteWatcher;
 
-public class Watcher(ILogger<Watcher> logger)
+public class Watcher(ILogger<Watcher> logger, PdfCreatorServivce pdfCreatorServivce)
 {
     private const string SqlInputQuery = @"SELECT w.Id, w.Url, w.XPathExpression, s.Content AS LatestContent 
                                         FROM dbo.Websites w 
@@ -36,7 +36,7 @@ public class Watcher(ILogger<Watcher> logger)
             if (contentChanged)
             {
                 logger.LogInformation($"Content changed for {website.Url}");
-                var newPdf = await ConvertPageToPdfAsync(website.Url);
+                var newPdf = await pdfCreatorServivce.ConvertPageToPdfAsync(website.Url);
 
                 var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings:WebsiteWatcherStorage");
                 var blobClient = new BlobClient(connectionString, "pdfs", $"{website.Id}-{DateTime.UtcNow:mmddyyy}.pdf");
@@ -45,21 +45,6 @@ public class Watcher(ILogger<Watcher> logger)
                 result = new SnapshotRecord(website.Id, content);
             }
         }
-
-        return result;
-    }
-    
-    private async Task<Stream> ConvertPageToPdfAsync(string url)
-    {
-        var browserFetcher = new BrowserFetcher();
-
-        await browserFetcher.DownloadAsync();
-        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
-        await using var page = await browser.NewPageAsync();
-        await page.GoToAsync(url);
-        await page.EvaluateExpressionHandleAsync("document.fonts.ready");
-        var result = await page.PdfStreamAsync();
-        result.Position = 0;
 
         return result;
     }
