@@ -2,9 +2,9 @@ using Azure.Storage.Blobs;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 using Microsoft.Extensions.Logging;
-using PuppeteerSharp;
+using WebsiteWatcher.Services;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Functions;
 
 public class PdfCreator(ILogger<PdfCreator> logger, PdfCreatorServivce pdfCreatorServivce)
 {

@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 using HtmlAgilityPack;
 using System.Xml.XPath;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Functions;
 
 public class Snapshot(ILogger<Snapshot> logger)
 {

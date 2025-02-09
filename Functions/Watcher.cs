@@ -1,12 +1,11 @@
-using System;
+using WebsiteWatcher.Services;
 using Azure.Storage.Blobs;
 using HtmlAgilityPack;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 using Microsoft.Extensions.Logging;
-using PuppeteerSharp;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Functions;
 
 public class Watcher(ILogger<Watcher> logger, PdfCreatorServivce pdfCreatorServivce)
 {

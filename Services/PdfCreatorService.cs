@@ -1,6 +1,6 @@
 using PuppeteerSharp;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Services;
 
 public class PdfCreatorServivce
 {

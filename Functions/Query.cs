@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Functions;
 
 public class Query(ILogger<Query> logger)
 {

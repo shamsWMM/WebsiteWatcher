@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using Microsoft.Azure.Functions.Worker.Extensions.Sql;
 
-namespace WebsiteWatcher;
+namespace WebsiteWatcher.Functions;
 public class Register(ILogger<Register> logger)
 {
     [Function(nameof(Register))]
