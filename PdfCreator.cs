@@ -8,17 +8,23 @@ namespace WebsiteWatcher;
 public class PdfCreator(ILogger<PdfCreator> logger)
 {
     [Function(nameof(PdfCreator))]
-    public async Task Run(
+    [BlobOutput("pdfs/new.pdf", Connection = "WebsiteWatcherStorage")]
+    public async Task<byte[]?> Run(
       [SqlTrigger("dbo.Websites", "WebsiteWatcherConnect")] SqlChange<Website>[] changes)
     {
+        byte[]? buffer = null;
         foreach (var change in changes)
         {
             if (change.Operation == SqlChangeOperation.Insert)
             {
                 var result = await ConvertPageToPdfAsync(change.Item.Url);
+                buffer = new byte[result.Length];
+                await result.ReadAsync(buffer);
+
                 logger.LogInformation($"PDF stream length is: {result.Length}");
             }
         }
+        return buffer;
     }
 
     private async Task<Stream> ConvertPageToPdfAsync(string url)
