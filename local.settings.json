@@ -1,0 +1,10 @@
+{
+    "ConnectionStrings": {
+        "WebsiteWatcherConnect": "Data Source=localhost;Initial Catalog=WebsiteWatcher;User Id=sa;Password=Admin123$;Integrated Security=True;TrustServerCertificate=true;Trusted_Connection=false"
+    },
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+    }
+}
