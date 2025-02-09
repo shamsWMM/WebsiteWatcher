@@ -39,4 +39,28 @@ CONSTRAINT [PK_Snapshots] PRIMARY KEY CLUSTERED
     [Id] ASC
 ))
 GO
+
+-- Delete all the rows
+DELETE Websites;
+GO
+DELETE Snapshots;
+GO
+
+--Add the Timestamp column to the Snapshots table
+ALTER TABLE Snapshots
+ADD [Timestamp] DATETIME NOT NULL DEFAULT GETUTCDATE ();
+GO
+
+--Add the Timestamp column to the Websites table
+ALTER TABLE Websites
+ADD [Timestamp] DATETIME NOT NULL DEFAULT GETUTCDATE();
+GO
+
+-- Drop the existing primary key constraint
+ALTER TABLE Snapshots DROP CONSTRAINT PK_Snapshots;
+GO
+
+-- Add the new primary key constraint with Id and Timestamp
+ALTER TABLE Snapshots
+ADD CONSTRAINT PK_Snapshots PRIMARY KEY ([Id], [Timestamp])
 ```
