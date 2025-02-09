@@ -9,9 +9,11 @@ namespace WebsiteWatcher;
 public class Snapshot(ILogger<Snapshot> logger)
 {
     [Function(nameof(Snapshot))]
-    public void Run(
+    [SqlOutput("dbo.Snapshots", "WebsiteWatcherConnect")]
+    public SnapshotRecord? Run(
                 [SqlTrigger("dbo.Websites", "WebsiteWatcherConnect")] IReadOnlyList<SqlChange<Website>> changes)
     {
+        SnapshotRecord? result = null;
         foreach (var change in changes)
         {
             logger.LogInformation($"{change.Operation}");
@@ -36,6 +38,7 @@ public class Snapshot(ILogger<Snapshot> logger)
                 var content = divWithContent != null ? divWithContent.InnerText.Trim() : "No content";
 
                 logger.LogInformation(content);
+                result = new SnapshotRecord(change.Item.Id, content);
             }
             catch (XPathException ex)
             {
@@ -46,5 +49,8 @@ public class Snapshot(ILogger<Snapshot> logger)
                 logger.LogError($"Error {change.Item.Url}: {ex.Message}");
             }
         }
+        return result;
     }
 }
+
+public record SnapshotRecord(Guid Id, string Content);
