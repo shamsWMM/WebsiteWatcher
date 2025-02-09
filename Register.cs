@@ -9,7 +9,9 @@ public class Register(ILogger<Register> logger)
 {
     [Function(nameof(Register))]
     [SqlOutput("dbo.Websites", "WebsiteWatcherConnect")]
-    public async Task<Website> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+    public async Task<Website> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req
+//    , SafeBrowsingService safeBrowsingService
+    )
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -17,6 +19,13 @@ public class Register(ILogger<Register> logger)
         var newWebsite = JsonSerializer.Deserialize<Website>(requestBody, options);
         newWebsite.Id = Guid.NewGuid();
 
+        // var result = safeBrowsingService.Check(newWebsite.Url);
+        // if (result.HasThreat)
+        // {
+        //     var threats = string.Join(", ", result.Threats);
+        //     logger.LogError($"Url {newWebsite.Url} has threats: {threats}");
+        //     return null;
+        // }
         return newWebsite;
     }
 }
